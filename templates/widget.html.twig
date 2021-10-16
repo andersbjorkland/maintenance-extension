@@ -1,0 +1,90 @@
+<style>
+    .loading {
+        animation: spin 1s linear infinite;
+        -webkit-animation: spin 1s linear infinite;
+    }
+
+    .btn--md {
+        min-width: 8rem;
+    }
+
+    @keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+    }
+    @-webkit-keyframes spin {
+    to { -webkit-transform: rotate(360deg); }
+    }
+</style>
+
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="fas fa-tachometer-alt"></i>{{ extension.name }}
+    </div>
+    <div class="card-body">
+        <p>{{ extension.composerpackage.description }}</p>
+        <div>
+            {% if opcache.enabled %}
+                <details class="mb-4">
+                    <summary>✔ {{ opcache.version }}</summary>
+                    <table id="opcache-status-container" class="table">
+                        <tr>
+                            <th class="w-25">Cache availability</th>
+                            <td id="opcache-full" class="w-75">{% if opcache.status.full%} 🗑 FULL {% else %} Space available {% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Cache validation</th>
+                            <td id="opcache-automatic-validation">{% if opcache.status.automatic_validation > 0 %} Automatic {% else %} Manual {% endif %}</td>
+                        </tr>
+                        <tr>
+                            <th>Last restart</th>
+                            <td id="opcache-restart">{{ opcache.status.last_restart_time}}</td>
+                        </tr>
+                        <tr>
+                            <th>Max accelerated files</th>
+                            <td id="opcache-max-accelerated">{{ opcache.status.max_accelerated_files}}</td>
+                        </tr>
+                        <tr>
+                            <th>Free memory (MB)</th>
+                            <td id="opcache-free-memory">{{ opcache.status.free_memory|round }}</td>
+                        </tr>
+                    </table>
+                </details>
+                <button 
+                    id="clear-opcache-btn" 
+                    class="btn btn-secondary btn--md" 
+                    onclick="clearCache()">
+                        <span id="clear-opcache-btn-text">Clear opcache</span><i id="clear-opcache-spinner" class="d-none fas fa-spinner loading text-light"></i>
+                </button>
+                
+            {% else %}
+                <p>❌ opcache not enabled</p>
+            {% endif %}
+        </div>         
+    </div>
+</div>
+
+<script>
+    console.log("HELLO WIDGET!");
+    
+    const spinnerElement = document.getElementById('clear-opcache-spinner');
+    const opcacheBtnText = document.getElementById('clear-opcache-btn-text');
+
+    const clearCache = () => {
+        console.log("Click registered");
+        opcacheBtnText.classList.add('d-none');
+        spinnerElement.classList.remove('d-none');
+        fetch("/extensions/maintenance/")
+            .then(response => response.json())
+            .then(result => {
+                console.log(result);
+                opcacheBtnText.classList.remove('d-none');
+                spinnerElement.classList.add('d-none');
+            })
+            .catch(error => {
+                console.error(error);
+                opcacheBtnText.classList.remove('d-none');
+                spinnerElement.classList.add('d-none');
+            });
+    }
+
+</script>

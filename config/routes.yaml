@@ -1,0 +1,4 @@
+
+maintenance_extension:
+  resource: '../../vendor/andersbjorkland/maintenance-extension/src/Controller/'
+  type: annotation

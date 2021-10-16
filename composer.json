@@ -2,6 +2,7 @@
     "name": "andersbjorkland/maintenance-extension",
     "description": "📦 This Bolt extension adds tools for clearing opcache and monitor performance.",
     "type": "bolt-extension",
+    "version": "0.0.2.2",
     "license": "MIT",
     "authors": [
         {
@@ -24,6 +25,12 @@
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
+    "scripts": {
+        "post-install-cmd": "php bin/composer-script/post-install-cmd.php --ansi",
+        "pre-package-uninstall": [
+            "php bin/console extensions:configure --remove-services --ansi"
+        ]
+    },
     "extra": {
         "entrypoint": "AndersBjorkland\\MaintenanceExtension\\Extension"
     }
