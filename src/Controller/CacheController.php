@@ -24,7 +24,7 @@ class CacheController extends ExtensionController
     }
 
     /**
-     * @Route("/extensions/maintenance/", name="maintenance_extension_clear")
+     * @Route("/extensions/maintenance/cache/clear", name="maintenance_extension_cache_clear")
      */
     public function clearCache(): Response
     {
@@ -35,25 +35,35 @@ class CacheController extends ExtensionController
         $this->extensionConfig = $extension->getConfig();
         
         $role = $this->extensionConfig->get('access_level');
-
         $role = $role ?? 'ROLE_ADMIN';
 
         $this->denyAccessUnlessGranted($role);
 
-        $errors = [];
-        $opcache = [];
-        $status = OpcacheStatus::getArray();
+        $status = false;
         if (function_exists('opcache_reset')) {
-            $status["cleared"] = opcache_reset();
+            $status = opcache_reset();
         }
-        $opcache = $status;
-        
-        $response = [];
-        $response["opcache"] = $opcache;
 
-        if (count($errors) > 0) {
-            $response["errors"] = $errors;
-        }
+        return $this->json(["opcache" => ["cleared" => $status]]);
+    }
+
+    /**
+     * @Route("/extensions/maintenance/cache/status", name="maintenance_extension_cache_status")
+     */
+    public function cacheStatus(): Response
+    {
+        /**
+         * @var Extension
+         */
+        $extension = $this->registry->getExtension(Extension::class);
+        $this->extensionConfig = $extension->getConfig();
+        
+        $role = $this->extensionConfig->get('access_level');
+        $role = $role ?? 'ROLE_ADMIN';
+        $this->denyAccessUnlessGranted($role);
+
+        $opcache = OpcacheStatus::getArray();
+        $response["opcache"] = $opcache;
 
         return $this->json($response);
     }

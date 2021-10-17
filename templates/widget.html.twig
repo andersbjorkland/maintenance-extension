@@ -63,28 +63,42 @@
     </div>
 </div>
 
-<script>
-    console.log("HELLO WIDGET!");
-    
+<script>    
     const spinnerElement = document.getElementById('clear-opcache-spinner');
     const opcacheBtnText = document.getElementById('clear-opcache-btn-text');
+    const opcacheRestartStatus = document.getElementById('opcache-restart');
+    const opcacheMemoryStatus = document.getElementById('opcache-free-memory');
 
     const clearCache = () => {
-        console.log("Click registered");
         opcacheBtnText.classList.add('d-none');
         spinnerElement.classList.remove('d-none');
-        fetch("/extensions/maintenance/")
+        fetch("/extensions/maintenance/cache/clear")
             .then(response => response.json())
             .then(result => {
-                console.log(result);
-                opcacheBtnText.classList.remove('d-none');
-                spinnerElement.classList.add('d-none');
+                updateCacheStatus();
             })
             .catch(error => {
                 console.error(error);
                 opcacheBtnText.classList.remove('d-none');
                 spinnerElement.classList.add('d-none');
             });
+    }
+
+    const updateCacheStatus = () => {
+        console.log("Updating cache-status");
+        fetch("/extensions/maintenance/cache/status")
+            .then(response => response.json())
+            .then(result => {
+                opcacheBtnText.classList.remove('d-none');
+                spinnerElement.classList.add('d-none');
+                opcacheRestartStatus.innerText = result.opcache.status.last_restart_time;
+                opcacheMemoryStatus.innerText = Math.round(result.opcache.status.free_memory);
+            })
+            .catch(error => {
+                console.error(error);
+                opcacheBtnText.classList.remove('d-none');
+                spinnerElement.classList.add('d-none');
+            })
     }
 
 </script>
