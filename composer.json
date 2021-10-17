@@ -2,7 +2,7 @@
     "name": "andersbjorkland/maintenance-extension",
     "description": "📦 This Bolt extension adds tools for clearing opcache and monitor performance.",
     "type": "bolt-extension",
-    "version": "0.0.2.2",
+    "version": "0.1",
     "license": "MIT",
     "authors": [
         {
