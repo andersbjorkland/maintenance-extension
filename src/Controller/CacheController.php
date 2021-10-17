@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace AndersBjorkland\MaintenanceExtension\Controller;
 
 use AndersBjorkland\MaintenanceExtension\Extension;
-use AndersBjorkland\MaintenanceExtension\Service\OpcacheStatus;
+use AndersBjorkland\MaintenanceExtension\Service\OpcacheStatusParser;
 use Bolt\Configuration\Config;
 use Bolt\Extension\ExtensionController;
 use Bolt\Extension\ExtensionRegistry;
@@ -62,7 +62,7 @@ class CacheController extends ExtensionController
         $role = $role ?? 'ROLE_ADMIN';
         $this->denyAccessUnlessGranted($role);
 
-        $opcache = OpcacheStatus::getArray();
+        $opcache = OpcacheStatusParser::getArray();
         $response["opcache"] = $opcache;
 
         return $this->json($response);

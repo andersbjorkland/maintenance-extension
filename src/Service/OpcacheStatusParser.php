@@ -6,7 +6,7 @@ namespace AndersBjorkland\MaintenanceExtension\Service;
 
 use DateTime;
 
-class OpcacheStatus
+class OpcacheStatusParser
 {
     public static function getArray():array
     {

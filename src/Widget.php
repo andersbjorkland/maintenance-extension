@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace AndersBjorkland\MaintenanceExtension;
 
-use AndersBjorkland\MaintenanceExtension\Service\OpcacheStatus;
+use AndersBjorkland\MaintenanceExtension\Service\OpcacheStatusParser;
 use Bolt\Widget\BaseWidget;
 use Bolt\Widget\Injector\AdditionalTarget;
 use Bolt\Widget\Injector\RequestZone;
 use Bolt\Widget\TwigAwareInterface;
-use DateTime;
 
 class Widget extends BaseWidget implements TwigAwareInterface
 {
@@ -29,6 +28,6 @@ class Widget extends BaseWidget implements TwigAwareInterface
 
     public function run(array $params = []): ?string
     {
-        return parent::run(['opcache' => OpcacheStatus::getArray()]);
+        return parent::run(['opcache' => OpcacheStatusParser::getArray()]);
     }
 }
